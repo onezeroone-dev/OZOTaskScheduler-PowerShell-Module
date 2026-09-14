@@ -572,8 +572,14 @@ Class OZOTask {
                 If ($this.Scheduled -eq $true -And ($this.OZOSchedules | Where-Object {$_.Valid -eq $true}).Count -gt 0) {
                     # Schedules is not null and there is at least one valid schedule; iterate over the valid schedules and create triggers
                     ForEach ($Schedule in ($this.OZOSchedules | Where-Object {$_.Valid -eq $true})) {
-                        # Create a weekly trigger for each schedule and add the trigger to the list of triggers
-                        $Triggers.Add((New-ScheduledTaskTrigger -Weekly -DaysOfWeek $Schedule.Weekday -At $Schedule.StartTime -RandomDelay (New-TimeSpan -Start [DateTime]$Schedule.StartTime -End ([DateTime]($Schedule.StartTime).AddSeconds($Schedule.RandomDelay)))))
+                        # Try to create a weekly trigger for each schedule and add the trigger to the list of triggers
+                        Try {
+                            $Triggers.Add((New-ScheduledTaskTrigger -Weekly -DaysOfWeek $Schedule.Weekday -At $Schedule.StartTime -RandomDelay (New-TimeSpan -Start [DateTime]$Schedule.StartTime -End ([DateTime]($Schedule.StartTime).AddSeconds($Schedule.RandomDelay)))))
+                            # Success
+                        } Catch {
+                            # Failure
+                            $this.ozoLogger.Write(("Failed to add schedule for weekday " + $Schedule.Weekday + " with start time " + $Schedule.StartTime + " and random delay " + $Schedule.RandomDelay + " with error " + $_.Exception.Message + "."),"Warning")
+                        }
                     }
                 }
                 # Determine Once is true and OnceDateTime is not null and is valid
@@ -721,7 +727,7 @@ Class OZOJsonTask {
             $this.ozoLogger.Write("Specify either JsonFile or JsonString, not both.", "Error")
             return $false
         }
-
+        # Determine if both JsonFile and JsonString are not provided
         If ([String]::IsNullOrEmpty($JsonFile) -eq $true -And [String]::IsNullOrEmpty($JsonString) -eq $true) {
             $this.ozoLogger.Write("Either JsonFile or JsonString is required.", "Error")
             return $false
