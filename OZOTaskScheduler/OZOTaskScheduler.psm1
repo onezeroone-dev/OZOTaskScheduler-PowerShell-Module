@@ -183,31 +183,31 @@ Class OZOTask {
             # Determine if Scheduled is set and there are no valid schedules
             If ($this.Scheduled -eq $true -And ($this.OZOSchedules | Where-Object {$_.Valid -eq $true}).Count -eq 0) {
                 # Scheduled is set and there are no valid schedules
-                $this.ozoLogger.Write(($this.Name + "Scheduled is enabled but no valid schedules were found."),"Error")
+                $this.ozoLogger.Write(($this.Name + " Scheduled is enabled but no valid schedules were found."),"Error")
                 $Return = $false
             }
             # Determine if Once is true and OnceDateTime is null
             If ($this.Once -eq $true -And $null -eq $this.OnceDateTime) {
                 # Once is true and OnceDateTime is null
-                $this.ozoLogger.Write(($this.Name + "Once is enabled but OnceDateTime is null."),"Error")
+                $this.ozoLogger.Write(($this.Name + " Once is enabled but OnceDateTime is null."),"Error")
                 $Return = $false
             }
             # Determine if Once is true and OnceDateTime is not null and OnceDateTime is not valid
             If ($this.Once -eq $true -And $null -ne $this.OnceDateTime -And $this.OnceDateTime.Valid -eq $false) {
                 # Once is true and OnceDateTime not null and OnceDateTime is not valid
-                $this.ozoLogger.Write(($this.Name + "Once is enabled but OnceDateTime is not valid."),"Error")
+                $this.ozoLogger.Write(($this.Name + " Once is enabled but OnceDateTime is not valid."),"Error")
                 $Return = $false
             }
             # Determine if no triggers are set
             If ($this.AtLogon -eq $false -And $this.Scheduled -eq $false -And $this.Once -eq $false -And $this.AtReboot -eq $false) {
                 # No triggers are set
-                $this.ozoLogger.Write(($this.Name + "No triggers are set."),"Error")
+                $this.ozoLogger.Write(($this.Name + " No triggers are set."),"Error")
                 $Return = $false
             }
             # Determine if AtLogon is set and any other trigger is set
             If ($this.AtLogon -eq $true -And ($this.Scheduled -eq $true -Or $this.Once -eq $true -Or $this.AtReboot -eq $true)) {
                 # AtLogon is set and any other trigger is set
-                $this.ozoLogger.Write(($this.Name + "AtLogon is enabled but other triggers are also set. AtLogon will be ignored."),"Warning")
+                $this.ozoLogger.Write(($this.Name + " AtLogon is enabled but other triggers are also set. AtLogon will be ignored."),"Warning")
             }
             # Determine if Settings is null
             If ($null -eq $this.Settings) {
@@ -623,6 +623,7 @@ Class OZOTask {
             # Determine that at least one trigger is defined
             If ($Triggers.Count -gt 0) {
                 # At least one trigger is defined; try to register the task
+                "Got to registering the scheduled task." | Out-Host
                 Try {
                     Register-ScheduledTask @scheduledTaskParameters -ErrorAction Stop
                     # Success
