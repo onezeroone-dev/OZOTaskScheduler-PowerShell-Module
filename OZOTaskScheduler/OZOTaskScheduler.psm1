@@ -803,7 +803,7 @@ Function Disable-OZOScheduledTask {
     # Get the task
     [PSCustomObject] $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName $TaskName)
     # Determine if the task is not null
-    If ($null -ne $ozoGetScheduledTask -And $null -ne $ozoGetScheduledTask.Task) {
+    If ($null -ne $ozoGetScheduledTask) {
         # Task is not null; call DisableTask to disable the task
         If ($PSCmdlet.ShouldProcess($TaskName, "Disable scheduled task")) {
             $ozoGetScheduledTask.DisableTask()
@@ -839,7 +839,7 @@ Function Enable-OZOScheduledTask {
     # Get the task
     [PSCustomObject] $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName $TaskName)
     # Determine if the task is not null
-    If ($null -ne $ozoGetScheduledTask -And $null -ne $ozoGetScheduledTask.Task) {
+    If ($null -ne $ozoGetScheduledTask) {
         # Task is not null; call EnableTask to enable the task
         If ($PSCmdlet.ShouldProcess($TaskName, "Enable scheduled task")) {
             $ozoGetScheduledTask.EnableTask()
@@ -874,12 +874,32 @@ Function Export-OZOScheduledTask {
     )
     # Get the task
     [PSCustomObject] $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName $TaskName)
-    $null -ne $ozoGetScheduledTask | Out-Host
-    $ozoGetScheduledTask | Out-Host
     # Determine if the task is not null
     If ($null -ne $ozoGetScheduledTask) {
-        # Task is not null; export the scheduled task to the specified JSON file
-        $ozoGetScheduledTask | Select-Object -Property Name,Script,Parameters,Directory,Disabled,Settings,AtLogon,AtReboot,Once,@{Name="OnceDateTime";Expression={$_.OnceDateTime | Select-Object -Property DateTime,RandomDelay}},Scheduled,@{Name="Schedules";Expression={[System.Collections.Generic.List[PSCustomObject]]($_.OZOSchedules | Select-Object Weekday,StartTime,RandomDelay)}}}} | ConvertTo-Json | Out-File -FilePath $OutFile
+        # Task is not null
+        If ($PSCmdlet.ShouldProcess($TaskName, "Remove scheduled task")) {
+            #Get the OneDateTime
+            [PSCustomObject] $OnceDateTime = @{DateTime=$ozoGetScheduledTask.OnceDateTime.DateTime;RandomDelay=$ozoGetScheduledTask.OnceDateTime.RandomDelay}
+            # Get the Schedules
+            [System.Collections.Generic.List[PSCustomObject]] $Schedules = @($ozoGetScheduledTask.OZOSchedules | Select-Object -Property WeekDay,StartTime,RandomDelay)
+            # Get the task details
+            [PSCustomObject] $Task = [PSCustomObject]@{
+                Name = $ozoGetScheduledTask.Name
+                Script = $ozoGetScheduledTask.Script
+                Parameters = $ozoGetScheduledTask.Parameters
+                Directory = $ozoGetScheduledTask.Directory
+                Disabled = $ozoGetScheduledTask.Disabled
+                Settings = $ozoGetScheduledTask.Settings
+                AtLogon = $ozoGetScheduledTask.AtLogon
+                AtReboot = $ozoGetScheduledTask.AtReboot
+                Once = $ozoGetScheduledTask.Once
+                OnceDateTime = $OnceDateTime
+                Scheduled = $ozoGetScheduledTask.Scheduled
+                Schedules = $Schedules
+            }
+            # Export to the specified JSON file
+            $Task | ConvertTo-Json | Out-File -FilePath $OutFile
+        }
     }
 }
 # Get-OZOScheduledTask function
@@ -964,7 +984,7 @@ Function Remove-OZOScheduledTask {
     # Get the task
     [PSCustomObject] $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName $TaskName)
     # Determine if the task is not null
-    If ($null -ne $ozoGetScheduledTask -And $null -ne $ozoGetScheduledTask.Task) {
+    If ($null -ne $ozoGetScheduledTask) {
         # Task is not null; call RemoveTask to disable and remove the task
         If ($PSCmdlet.ShouldProcess($TaskName, "Remove scheduled task")) {
             $ozoGetScheduledTask.RemoveTask()
