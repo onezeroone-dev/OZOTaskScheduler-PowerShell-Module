@@ -11,10 +11,19 @@ Class OZOOnceDateTime {
     # PROPERTIES: Strings
     [String] $DateTime = $null
     # METHODS: Constructor method
+    <#
+    OZOOnceDateTime([String]$DateTime,[Int32]$RandomDelay) {
+        # Set properties
+        $this.DateTime    = $DateTime
+        $this.RandomDelay = $RandomDelay
+        # Call validates to set valid
+        $this.Valid = $this.Validates()
+    }
+    #>
     OZOOnceDateTime($OnceDateTime) {
         # Set properties
-        $this.RandomDelay = $OnceDateTime.RandomDelay
         $this.DateTime    = $OnceDateTime.DateTime
+        $this.RandomDelay = $OnceDateTime.RandomDelay
         # Call validates to set valid
         $this.Valid = $this.Validates()
     }
@@ -55,11 +64,21 @@ Class OZOSchedule {
     # PROPERTIES: String Lists
     Hidden [System.Collections.Generic.List[String]] $Weekdays = @("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
     # METHODS: Constructor method
+    <#
+    OZOSchedule([String]$StartTime,[Int32]$RandomDelay,[String]$WeekDay) {
+        # Set properties
+        $this.RandomDelay = $RandomDelay
+        $this.StartTime   = $StartTime
+        $this.WeekDay     = $WeekDay
+        # Call validates to set valid
+        $this.Valid = $this.Validates()
+    }
+    #>
     OZOSchedule($Schedule) {
         # Set properties
         $this.RandomDelay = $Schedule.RandomDelay
-        $this.WeekDay     = $Schedule.WeekDay
         $this.StartTime   = $Schedule.StartTime
+        $this.WeekDay     = $Schedule.WeekDay
         # Call validates to set valid
         $this.Valid = $this.Validates()
     }
@@ -95,10 +114,10 @@ Class OZOTask {
     [Boolean] $AtReboot  = $false
     [Boolean] $AtLogon   = $false
     # PROPERTIES: OZOOnceDateTimes
-    Hidden [OZOOnceDateTime] $OnceDateTime = $null
+    [OZOOnceDateTime] $OnceDateTime = $null
     # PROPERTIES: PSCustomObjects
     Hidden [PSCustomObject] $ozoLogger = $null
-    Hidden [PSCustomObject] $Settings  = $null
+    [PSCustomObject] $Settings  = $null
     # PROPERTIES: OZOSchedule Lists
     [System.Collections.Generic.List[OZOSchedule]] $OZOSchedules = @()
     # PROPERTIES: Strings
@@ -108,8 +127,8 @@ Class OZOTask {
     [String] $Directory  = $null
     [String] $User       = $null
     # PROPERTIES: String Lists
-    Hidden [System.Collections.Generic.List[String]] $Compatibilities = @("At","V1","Vista","Win7","Win8")
-    Hidden [System.Collections.Generic.List[String]] $MultipleInstancesValues = @("IgnoreNew","Parallel","Queue")
+    [System.Collections.Generic.List[String]] $Compatibilities = @("At","V1","Vista","Win7","Win8")
+    [System.Collections.Generic.List[String]] $MultipleInstancesValues = @("IgnoreNew","Parallel","Queue")
     # METHODS: Constructor method - Disable, Enable, Export, Get, Remove
     OZOTask([String]$Name) {
         # Set Properties
@@ -123,7 +142,7 @@ Class OZOTask {
         }
     }
     # METHODS: Constructor method - full
-    OZOTask([String]$Name,[String]$Script,[String]$Parameters,[String]$Directory,[Boolean]$Disabled,[PSCustomObject]$Settings,[String]$User,[Boolean]$AtLogon,[Boolean]$AtReboot,[Boolean]$Once,[PSCustomObject]$OnceDateTime,[Boolean]$Scheduled,[System.Collections.Generic.List[System.Collections.IEnumerable]]$Schedules) {
+    OZOTask([String]$Name,[String]$Script,[String]$Parameters,[String]$Directory,[Boolean]$Disabled,[PSCustomObject]$Settings,[String]$User,[Boolean]$AtLogon,[Boolean]$AtReboot,[Boolean]$Once,[PSCustomObject]$OnceDateTime,[Boolean]$Scheduled,[System.Collections.Generic.List[PSCustomObject]]$Schedules) {
         # Set Properties
         $this.Name       = $Name
         $this.Script     = $Script
@@ -141,11 +160,13 @@ Class OZOTask {
         # Iterate over schedules
         ForEach ($Schedule in $Schedules) {
             # Instantiate an OZOSchedule object and add it to the schedules list
+            #$this.OZOSchedules.Add(([OZOSchedule]::new([String]$Schedule.StartTime,[Int32]$Schedule.RandomDelay,[String]$Schedule.WeekDay)))
             $this.OZOSchedules.Add(([OZOSchedule]::new($Schedule)))
         }
-        # Iterate over once date times
+        # Determine if Once is set
         If ($this.Once -eq $true) {
-            # Set OnceDateTime
+            # Once is set; instantiate the OnceDateTime object
+            #$this.OnceDateTime = [OZOOnceDateTime]::new([String]$OnceDateTime.DateTime,[Int32]$OnceDateTime.RandomDelay)
             $this.OnceDateTime = [OZOOnceDateTime]::new($OnceDateTime)
         }
     }
@@ -574,7 +595,7 @@ Class OZOTask {
                     ForEach ($Schedule in ($this.OZOSchedules | Where-Object {$_.Valid -eq $true})) {
                         # Try to create a weekly trigger for each schedule and add the trigger to the list of triggers
                         Try {
-                            $Triggers.Add((New-ScheduledTaskTrigger -Weekly -DaysOfWeek $Schedule.Weekday -At $Schedule.StartTime -RandomDelay (New-TimeSpan -Start [DateTime]$Schedule.StartTime -End ([DateTime]($Schedule.StartTime).AddSeconds($Schedule.RandomDelay)))))
+                            $Triggers.Add((New-ScheduledTaskTrigger -Weekly -DaysOfWeek $Schedule.Weekday -At $Schedule.StartTime -RandomDelay (New-TimeSpan -Start ([DateTime]$Schedule.StartTime) -End (([DateTime]$Schedule.StartTime).AddSeconds($Schedule.RandomDelay)))))
                             # Success
                         } Catch {
                             # Failure
@@ -695,7 +716,7 @@ Class OZOJsonTask {
         # Create an OZOLogger object
         $this.ozoLogger = (New-OZOLogger)
         # Determine if the configuration and environment validate
-        If (($this.ValidateConfiguration($JsonFile,$JsonString) -And $this.ValidateEnvironment()) -eq $true) {
+        If ($this.ValidateConfiguration($JsonFile,$JsonString) -eq $true) {
             # Determine if JSON is not null
             If ($null -ne $this.Json) {
                 # Instantiate an OZOTask object for this Task
@@ -753,13 +774,6 @@ Class OZOJsonTask {
             $this.ozoLogger.Write("JSON content is null or empty.", "Error")
             return $false
         }
-        # Return
-        Return $Return
-    }
-    # METHODS: Environment validation method
-    Hidden [Boolean] ValidateEnvironment() {
-        # Control variable
-        [Boolean] $Return = $true
         # Return
         Return $Return
     }
@@ -930,6 +944,34 @@ Function New-OZOScheduledTask {
         }
     }
 }
+# Remove-OZOScheduledTask function
+Function Remove-OZOScheduledTask {
+    <#
+        .SYNOPSIS
+        See description.
+        .DESCRIPTION
+        Disables and removes a scheduled task, if found.
+        .PARAMETER TaskName
+        The name of the task to remove.
+        .EXAMPLE
+        Remove-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
+        .LINK
+        https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Remove-OZOScheduledTask.md
+    #>
+    # Parameters
+    [CmdLetBinding(SupportsShouldProcess=$true,ConfirmImpact="High")]Param (
+        [Parameter(Mandatory=$true,HelpMessage="The name of the task to remove")][String]$TaskName
+    )
+    # Get the task
+    [PSCustomObject] $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName $TaskName)
+    # Determine if the task is not null
+    If ($null -ne $ozoGetScheduledTask -And $null -ne $ozoGetScheduledTask.Task) {
+        # Task is not null; call RemoveTask to disable and remove the task
+        If ($PSCmdlet.ShouldProcess($TaskName, "Remove scheduled task")) {
+            $ozoGetScheduledTask.RemoveTask()
+        }
+    }
+}
 # Set-OZOScheduledTask function
 Function Set-OZOScheduledTask {
     <#
@@ -970,34 +1012,7 @@ Function Set-OZOScheduledTask {
         }
     }
 }
-# Remove-OZOScheduledTask function
-Function Remove-OZOScheduledTask {
-    <#
-        .SYNOPSIS
-        See description.
-        .DESCRIPTION
-        Disables and removes a scheduled task, if found.
-        .PARAMETER TaskName
-        The name of the task to remove.
-        .EXAMPLE
-        Remove-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
-        .LINK
-        https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Remove-OZOScheduledTask.md
-    #>
-    # Parameters
-    [CmdLetBinding(SupportsShouldProcess=$true,ConfirmImpact="High")]Param (
-        [Parameter(Mandatory=$true,HelpMessage="The name of the task to remove")][String]$TaskName
-    )
-    # Get the task
-    [PSCustomObject] $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName $TaskName)
-    # Determine if the task is not null
-    If ($null -ne $ozoGetScheduledTask -And $null -ne $ozoGetScheduledTask.Task) {
-        # Task is not null; call RemoveTask to disable and remove the task
-        If ($PSCmdlet.ShouldProcess($TaskName, "Remove scheduled task")) {
-            $ozoGetScheduledTask.RemoveTask()
-        }
-    }
-}
+
 
 Export-ModuleMember -Function `
     Disable-OZOScheduledTask,
