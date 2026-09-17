@@ -874,11 +874,12 @@ Function Export-OZOScheduledTask {
     )
     # Get the task
     [PSCustomObject] $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName $TaskName)
-    $ozoGetscheduledTask.Task | Out-Host
+    $null -ne $ozoGetScheduledTask | Out-Host
+    $ozoGetScheduledTask | Out-Host
     # Determine if the task is not null
-    If ($null -ne $ozoGetScheduledTask -And $null -ne $ozoGetScheduledTask.Task) {
+    If ($null -ne $ozoGetScheduledTask) {
         # Task is not null; export the scheduled task to the specified JSON file
-        $ozoGetScheduledTask | Select-Object -Property Name,Script,Parameters,Directory,Disabled,Settings,AtLogon,AtReboot,Once,OnceDateTime,Scheduled,@{Name="Schedules";Expression={$_.OZOSchedules | Select-Object -Property Weekday,StartTime,RandomDelay}} | ConvertTo-Json | Out-File -Path $OutFile
+        $ozoGetScheduledTask | Select-Object -Property Name,Script,Parameters,Directory,Disabled,Settings,AtLogon,AtReboot,Once,@{Name="OnceDateTime";Expression={$_.OnceDateTime | Select-Object -Property DateTime,RandomDelay}},Scheduled,@{Name="Schedules";Expression={[System.Collections.Generic.List[PSCustomObject]]($_.OZOSchedules | Select-Object Weekday,StartTime,RandomDelay)}}}} | ConvertTo-Json | Out-File -FilePath $OutFile
     }
 }
 # Get-OZOScheduledTask function
