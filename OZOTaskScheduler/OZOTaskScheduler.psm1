@@ -570,7 +570,6 @@ Class OZOTask {
                 # Disabled is set; add the Disable parameter
                 $settingsParameters.Disable = $true
             }
-            $settingsParameters | Out-Host
             ## TRIGGERS AND SCHEDULED TASK PARAMETERS
             # Determine if at least one of Scheduled, Once, or AtReboot is true
             If ($this.Scheduled -eq $true -Or $this.Once -eq $true -Or $this.AtReboot -eq $true) {
