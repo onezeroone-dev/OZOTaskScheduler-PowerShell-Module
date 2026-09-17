@@ -11,15 +11,6 @@ Class OZOOnceDateTime {
     # PROPERTIES: Strings
     [String] $DateTime = $null
     # METHODS: Constructor method
-    <#
-    OZOOnceDateTime([String]$DateTime,[Int32]$RandomDelay) {
-        # Set properties
-        $this.DateTime    = $DateTime
-        $this.RandomDelay = $RandomDelay
-        # Call validates to set valid
-        $this.Valid = $this.Validates()
-    }
-    #>
     OZOOnceDateTime($OnceDateTime) {
         # Set properties
         $this.DateTime    = $OnceDateTime.DateTime
@@ -64,16 +55,6 @@ Class OZOSchedule {
     # PROPERTIES: String Lists
     Hidden [System.Collections.Generic.List[String]] $Weekdays = @("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
     # METHODS: Constructor method
-    <#
-    OZOSchedule([String]$StartTime,[Int32]$RandomDelay,[String]$WeekDay) {
-        # Set properties
-        $this.RandomDelay = $RandomDelay
-        $this.StartTime   = $StartTime
-        $this.WeekDay     = $WeekDay
-        # Call validates to set valid
-        $this.Valid = $this.Validates()
-    }
-    #>
     OZOSchedule($Schedule) {
         # Set properties
         $this.RandomDelay = $Schedule.RandomDelay
