@@ -599,14 +599,20 @@ Class OZOTask {
                             # Success
                         } Catch {
                             # Failure
-                            $this.ozoLogger.Write(("Failed to add schedule for weekday " + $Schedule.Weekday + " with start time " + $Schedule.StartTime + " and random delay " + $Schedule.RandomDelay + " with error " + $_.Exception.Message + "."),"Warning")
+                            $this.ozoLogger.Write(("Failed to add schedule for weekday " + $Schedule.Weekday + " with start time " + $Schedule.StartTime + " and random delay " + $Schedule.RandomDelay + " with error " + $_.Exception.Message + "."),"Error")
                         }
                     }
                 }
                 # Determine Once is true and OnceDateTime is not null and is valid
                 If ($this.Once -eq $true -And $null -ne $this.OnceDateTime -And $this.OnceDateTime.Valid -eq $true) {
-                    # Once is true, and OnceDateTime is not null and is valid; create a one-time trigger and add it to the list of triggers
-                    $Triggers.Add((New-ScheduledTaskTrigger -Once -At $this.OnceDateTime.DateTime -RandomDelay (New-TimeSpan -Start [DateTime]$this.OnceDateTime.DateTime -End ([DateTime]($this.OnceDateTime.DateTime).AddSeconds($this.OnceDateTime.RandomDelay)))))
+                    # Once is true, and OnceDateTime is not null and is valid; try to create a one-time trigger and add it to the list of triggers
+                    Try {
+                        $Triggers.Add((New-ScheduledTaskTrigger -Once -At $this.OnceDateTime.DateTime -RandomDelay (New-TimeSpan -Start ([DateTime]$this.OnceDateTime.DateTime) -End (([DateTime]$this.OnceDateTime.DateTime).AddSeconds($this.OnceDateTime.RandomDelay)))))
+                        # Success
+                    } Catch {
+                        # Failure
+                        $this.ozoLogger.Write(("Failed to add once schedule with start time " + $this.OnceDateTime.DateTime + " and random delay " + $this.OnceDateTime.RandomDelay + " with error " + $_.Exception.Message + "."),"Error")
+                    }
                 }
                 # Determine AtReboot is true
                 If ($this.AtLogon -eq $false -And $this.AtReboot -eq $true) {
