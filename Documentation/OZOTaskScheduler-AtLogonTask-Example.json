@@ -1,0 +1,32 @@
+{
+    "Name":"Example AtLogon Task",
+    "Script":"C:\\Temp\\OZOTaskScheduler-AtLogonTask-Example.ps1",
+    "Parameters":"",
+    "Directory":"C:\\Temp",
+    "Disabled":true,
+    "Settings":{
+        "AllowDemandStart":true,
+        "AllowHardTerminate":true,
+        "AllowStartOnRemoteAppSession":true,
+        "Compatibility":"Win8",
+        "DeleteExpiredTaskAfter":"PT0S",
+        "DisallowStartIfOnBatteries":false,
+        "DontStopIfGoingOnBatteries":true,
+        "ExecutionTimeLimit":"PT0S",
+        "Hidden":false,
+        "IdleSettings":{
+            "StopOnIdleEnd":false,
+            "RestartOnIdle":false
+        },
+        "MultipleInstances":"IgnoreNew",
+        "Priority":"Normal",
+        "RunOnlyIfNetworkAvailable":false,
+        "WakeToRun":false
+    },
+    "AtLogon":true,
+    "AtReboot":false,
+    "Once":false,
+    "OnceDateTime":{},
+    "Scheduled":false,
+    "Schedules":[]
+}
