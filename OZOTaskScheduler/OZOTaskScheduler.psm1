@@ -972,6 +972,8 @@ Function Remove-OZOScheduledTask {
         Disables and removes a scheduled task, if found.
         .PARAMETER TaskName
         The name of the task to remove.
+        .PARAMETER Confirm
+        Prompts for confirmation before removing the task. Use "-Confirm:$false" to remove the task without prompting.
         .EXAMPLE
         Remove-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
         .LINK

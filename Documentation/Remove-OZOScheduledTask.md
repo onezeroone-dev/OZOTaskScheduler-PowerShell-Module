@@ -11,12 +11,14 @@ This script requires _Administrator_ privileges.
 ```
 Remove-OZOScheduledTask
     -TaskName <String>
+    [-Confirm]
 ```
 
 ## Parameters
 |Parameter|Description|
 |---------|-----------|
 |`TaskName`|The name of the task to remove.|
+|`Confirm`|Prompts for confirmation before removing the task. Use `-Confirm:$false` to remove the task without prompting.|
 
 ## Example
 ```powershell
