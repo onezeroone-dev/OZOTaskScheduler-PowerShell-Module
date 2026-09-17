@@ -567,6 +567,7 @@ Class OZOTask {
                 # Disabled is set; add the Disable parameter
                 $settingsParameters.Disable = $true
             }
+            $settingsParameters | Out-Host
             ## TRIGGERS AND SCHEDULED TASK PARAMETERS
             # Determine if at least one of Scheduled, Once, or AtReboot is true
             If ($this.Scheduled -eq $true -Or $this.Once -eq $true -Or $this.AtReboot -eq $true) {
@@ -623,17 +624,16 @@ Class OZOTask {
             # Determine that at least one trigger is defined
             If ($Triggers.Count -gt 0) {
                 # At least one trigger is defined; try to register the task
-                "Got to registering the scheduled task." | Out-Host
                 Try {
                     Register-ScheduledTask @scheduledTaskParameters -ErrorAction Stop
                     # Success
                 } Catch {
                     # Failure
-                    $this.ozoLogger.Write(("Failed to register the " + $this.Name + " task with error " + $_ + "."), "Error")
+                    $this.ozoLogger.Write(("Failed to register the " + $this.Name + " task with error " + $_ + "."),"Error")
                 }
             } Else {
                 # Task exists or no triggers defined
-                $this.ozoLogger.Write("No triggers were defined.", "Error")
+                $this.ozoLogger.Write("No triggers were defined.","Error")
             }
         }
     }
