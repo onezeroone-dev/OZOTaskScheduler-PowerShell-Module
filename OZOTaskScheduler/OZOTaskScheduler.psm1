@@ -465,13 +465,16 @@ Class OZOTask {
         }
         # Determine if DeleteExpiredTaskAfter is set
         If ([String]::IsNullOrEmpty($this.Settings.DeleteExpiredTaskAfter) -eq $false) {
-            # DeleteExpiredTaskAfter is set; Try to convert it to a TimeSpan
-            Try {
-                $SettingsParameters.DeleteExpiredTaskAfter = [System.Xml.XmlConvert]::ToTimeSpan([String]$this.Settings.DeleteExpiredTaskAfter)
-                # Success
-            } Catch {
-                # Failure
-                $this.ozoLogger.Write(($this.Name + " Settings.DeleteExpiredTaskAfter value '" + $this.Settings.DeleteExpiredTaskAfter + "' is not a valid duration and will be ignored."), "Warning")
+            # Determine if DeleteExpiredTaskAfter is not zero (PT0S)
+            If ($this.Settings.DeleteExpiredTaskAfter -ne "PT0S") {
+                # DeleteExpiredTaskAfter is set; Try to convert it to a TimeSpan
+                Try {
+                    $SettingsParameters.DeleteExpiredTaskAfter = [System.Xml.XmlConvert]::ToTimeSpan([String]$this.Settings.DeleteExpiredTaskAfter)
+                    # Success
+                } Catch {
+                    # Failure
+                    $this.ozoLogger.Write(($this.Name + " Settings.DeleteExpiredTaskAfter value '" + $this.Settings.DeleteExpiredTaskAfter + "' is not a valid duration and will be ignored."), "Warning")
+                }
             }
         }
         # Determine if DisallowStartIfOnBatteries is false
@@ -619,6 +622,16 @@ Class OZOTask {
                     Action   = (New-ScheduledTaskAction @actionParameters)
                     Trigger  = $Triggers
                     Settings = (New-ScheduledTaskSettingsSet @settingsParameters)
+                }
+            }
+            # Determine if DeleteExpiredTaskAfter is set; Task Scheduler requires every trigger to have an EndBoundary or registration fails with a missing EndBoundary error
+            If ($settingsParameters.ContainsKey("DeleteExpiredTaskAfter") -eq $true) {
+                ForEach ($Trigger in $Triggers) {
+                    # Determine if the trigger does not already have an EndBoundary
+                    If ([String]::IsNullOrEmpty($Trigger.EndBoundary) -eq $true) {
+                        # EndBoundary is not set; set it far in the future so the task remains valid without altering its intended schedule
+                        $Trigger.EndBoundary = (Get-Date).AddYears(99).ToString("yyyy-MM-ddTHH:mm:ss")
+                    }
                 }
             }
             # Determine that at least one trigger is defined
