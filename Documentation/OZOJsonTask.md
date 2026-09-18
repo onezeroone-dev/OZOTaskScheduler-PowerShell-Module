@@ -18,10 +18,12 @@ Creates a new instance from either a JSON file path or a JSON string.
 - `$JsonString`: A JSON string that defines the task
 
 ## Properties
-The class exposes the following property:
+Public properties:
 - `$Task`: The `OZOTask` object created from the supplied configuration
 
-The parsed JSON definition and logger are stored as hidden internal properties.
+Hidden properties:
+- `$Json`: The parsed JSON definition
+- `$ozoLogger`: An OZOLogger object.
 
 ## Methods
 - **ValidateConfiguration($JsonFile,$JsonString)**

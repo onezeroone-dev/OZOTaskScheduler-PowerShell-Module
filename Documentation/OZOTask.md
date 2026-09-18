@@ -42,14 +42,19 @@ Public properties:
 - `$Once`: Boolean indicating whether the task has a one-time trigger
 - `$AtReboot`: Boolean indicating whether the task runs at startup
 - `$AtLogon`: Boolean indicating whether the task runs at logon
+- `$OnceDateTime`: One-time trigger configuration
+- `$Settings`: Task Scheduler settings
 - `$OZOSchedules`: A list of converted `OZOSchedule` objects associated with the task
 - `$Name`: Name of the task
 - `$Script`: Path to the script or binary to run
 - `$Parameters`: Parameters passed to the task action
 - `$Directory`: Working directory for the task action
 - `$User`: Account associated with the task
+- `$Compatibilities`: Compatibility validation
+- `$MultipleInstancesValues`: `MultipleInstances` validation
 
-`$ozoLogger`, `$Compatibilities`, `$MultipleInstancesValues`, `$OnceDateTime`, and `$Settings` are hidden internal properties used for logging, compatibility validation, `MultipleInstances` validation, one-time trigger configuration, and Task Scheduler settings.
+Hidden properties:
+- `$ozoLogger`: An OZOLogger object
 
 ## Methods
 - **Validates()**

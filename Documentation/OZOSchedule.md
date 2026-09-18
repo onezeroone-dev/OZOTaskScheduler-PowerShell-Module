@@ -9,7 +9,7 @@ This is an **internal class** used by `OZOTask` to validate and process daily an
 
 ## Constructors
 
-**Schedule Constructor**
+**Full Constructor**
 ```
 OZOSchedule($Schedule)
 ```
@@ -24,7 +24,8 @@ Public properties:
 - `$StartTime`: The time the task should start
 - `$WeekDay`: The day of the week for the scheduled trigger
 
-`$Weekdays` is a hidden internal list used for weekday validation.
+Hidden properties:
+- `$Weekdays`: a list used for weekday validation
 
 ## Methods
 - **Validates()**

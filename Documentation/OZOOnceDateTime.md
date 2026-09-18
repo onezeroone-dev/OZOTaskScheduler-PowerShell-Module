@@ -9,7 +9,7 @@ This is an **internal class** used by `OZOTask`. It is not intended for direct u
 
 ## Constructors
 
-**OnceDateTime Constructor**
+**Full Constructor**
 ```
 OZOOnceDateTime($OnceDateTime)
 ```

@@ -794,6 +794,8 @@ Function Disable-OZOScheduledTask {
         Disable-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
         .LINK
         https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Disable-OZOScheduledTask.md
+        .NOTES
+        This function requires Administrator privileges.
     #>
     # Parameters
     [CmdLetBinding(SupportsShouldProcess=$true)] Param (
@@ -830,6 +832,8 @@ Function Enable-OZOScheduledTask {
         Enable-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
         .LINK
         https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Enable-OZOScheduledTask.md
+        .NOTES
+        This function requires Administrator privileges.
     #>
     # Parameters
     [CmdLetBinding(SupportsShouldProcess=$true)] Param (
@@ -866,6 +870,8 @@ Function Export-OZOScheduledTask {
         Export-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
         .LINK
         https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Export-OZOScheduledTask.md
+        .NOTES
+        This function requires Administrator privileges.
     #>
     # Parameters
     [CmdLetBinding(SupportsShouldProcess=$true)] Param (
@@ -915,6 +921,8 @@ Function Get-OZOScheduledTask {
         $ozoGetScheduledTask = (Get-OZOScheduledTask -TaskName "Update OZO PowerShell Module")
         .LINK
         https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Get-OZOScheduledTask.md
+        .NOTES
+        This function requires Administrator privileges.
     #>
     # Parameters
     [CmdLetBinding()] Param (
@@ -942,6 +950,8 @@ Function New-OZOScheduledTask {
         New-OZOScheduledTask -JsonString '{"Name":"Example Scheduled Task","Script":"C:\\Temp\\OZOTaskScheduler-ScheduledTask-Example.ps1","Parameters":"","Directory":"C:\\Temp","Disabled":true,"Settings":{"AllowDemandStart":true,"AllowHardTerminate":true,"AllowStartOnRemoteAppSession":true,"Compatibility":"Win8","DeleteExpiredTaskAfter":"PT0S","DisallowStartIfOnBatteries":false,"DontStopIfGoingOnBatteries":true,"ExecutionTimeLimit":"PT0S","Hidden":false,"IdleSettings":{"StopOnIdleEnd":false,"RestartOnIdle":false},"MultipleInstances":"IgnoreNew","Priority":"Normal","RunOnlyIfNetworkAvailable":false,"WakeToRun":false},"AtLogon":false,"AtReboot":true,"Once":true,"OnceDateTime":{"DateTime":"2099-12-31T09:00:00","RandomDelay":0},"Scheduled":true,"Schedules":[{"WeekDay":"Monday","StartTime":"8:00 AM","RandomDelay":0},{"WeekDay":"Wednesday","StartTime":"8:00 AM","RandomDelay":0},{"WeekDay":"Friday","StartTime":"8:00 AM","RandomDelay":0}]}'
         .LINK
         https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/New-OZOScheduledTask.md
+        .NOTES
+        This function requires Administrator privileges.
     #>
     [CmdLetBinding(SupportsShouldProcess=$true)]Param (
         [Parameter(Mandatory=$true,HelpMessage="A JSON file that defines a task to schedule",ParameterSetName="JsonFile")][String]$JsonFile,
@@ -978,6 +988,8 @@ Function Remove-OZOScheduledTask {
         Remove-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
         .LINK
         https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Remove-OZOScheduledTask.md
+        .NOTES
+        This function requires Administrator privileges.
     #>
     # Parameters
     [CmdLetBinding(SupportsShouldProcess=$true,ConfirmImpact="High")]Param (
@@ -1012,6 +1024,8 @@ Function Set-OZOScheduledTask {
         Set-OZOScheduledTask -JsonString '{"Name":"Example Scheduled Task","Script":"C:\\Temp\\OZOTaskScheduler-ScheduledTask-Example.ps1","Parameters":"","Directory":"C:\\Temp","Disabled":true,"Settings":{"AllowDemandStart":true,"AllowHardTerminate":true,"AllowStartOnRemoteAppSession":true,"Compatibility":"Win8","DeleteExpiredTaskAfter":"PT0S","DisallowStartIfOnBatteries":false,"DontStopIfGoingOnBatteries":true,"ExecutionTimeLimit":"PT0S","Hidden":false,"IdleSettings":{"StopOnIdleEnd":false,"RestartOnIdle":false},"MultipleInstances":"IgnoreNew","Priority":"Normal","RunOnlyIfNetworkAvailable":false,"WakeToRun":false},"AtLogon":false,"AtReboot":true,"Once":true,"OnceDateTime":{"DateTime":"2099-12-31T09:00:00","RandomDelay":0},"Scheduled":true,"Schedules":[{"WeekDay":"Monday","StartTime":"8:00 AM","RandomDelay":0},{"WeekDay":"Wednesday","StartTime":"8:00 AM","RandomDelay":0},{"WeekDay":"Friday","StartTime":"8:00 AM","RandomDelay":0}]}'
         .LINK
         https://github.com/onezeroone-dev/OZOTaskScheduler-PowerShell-Repository/blob/main/Documentation/Set-OZOScheduledTask.md
+        .NOTES
+        This function requires Administrator privileges.
     #>
     [CmdLetBinding(SupportsShouldProcess=$true)]Param (
         [Parameter(Mandatory=$true,HelpMessage="A JSON file that defines a task to schedule",ParameterSetName="JsonFile")][String]$JsonFile,

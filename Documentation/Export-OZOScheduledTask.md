@@ -4,9 +4,6 @@ This function is part of the [OZOTaskScheduler PowerShell Module](../README.md).
 ## Description
 Exports a task to JSON, if found.
 
-## Prerequisites
-This script requires _Administrator_ privileges.
-
 ## Syntax
 ```
 Export-OZOScheduledTask
@@ -24,3 +21,6 @@ Export-OZOScheduledTask
 ```powershell
 Export-OZOScheduledTask -OutFile "C:\Temp\update-ozo-powershell-module-task.json" -TaskName "Update OZO PowerShell Module"
 ```
+
+## Notes
+This function requires _Administrator_ privileges.
