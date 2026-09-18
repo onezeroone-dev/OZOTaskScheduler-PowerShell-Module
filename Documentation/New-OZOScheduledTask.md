@@ -28,7 +28,7 @@ New-OZOScheduledTask
 |`PassThru`|Return the created task.|
 
 ## JSON Definition
-See [Set-OZOScheduledTask](Set-OZOScheduledTask.md) for the JSON definition.
+See [README.md](..\README.md).
 
 ## Examples
 ```powershell
