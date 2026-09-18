@@ -4,9 +4,6 @@ This function is part of the [OZOTaskScheduler PowerShell Module](../README.md).
 ## Description
 Disables a task, if found.
 
-## Prerequisites
-This script requires _Administrator_ privileges.
-
 ## Syntax
 ```
 Disable-OZOScheduledTask
@@ -24,3 +21,6 @@ Disable-OZOScheduledTask
 ```powershell
 Disable-OZOScheduledTask -TaskName "Update OZO PowerShell Module"
 ```
+
+## Notes
+This function requires _Administrator_ privileges.

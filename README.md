@@ -34,7 +34,7 @@ Import-Module OZOTaskScheduler
 - [OZOSchedule](Documentation/OZOSchedule.md)
 
 ## JSON Definition
-[New-OZOScheduledTask](Documentation/New-OZOScheduledTask.md) and [Set-OZOScheduledTask](Documentation/Set-OZOScheduledTask.md) expect a task expressed as a JSON dictionary. The following example shows a _Scheduled_ task with three schedule entries:
+[_New-OZOScheduledTask_](Documentation/New-OZOScheduledTask.md) and [_Set-OZOScheduledTask_](Documentation/Set-OZOScheduledTask.md) expect a task expressed as a JSON dictionary. The following example shows a _Scheduled_ task with three schedule entries:
 
 ```json
 {
@@ -248,6 +248,9 @@ Encapsulate the resulting compressed JSON string in single quotes (`'`) so it ca
 
 ## Logging
 When available, messages are written to the [_One Zero One_ event provider](https://github.com/onezeroone-dev/OZOLogger-PowerShell-Module/blob/main/README.md). Otherwise, events are written to the _Microsoft-Windows-PowerShell_ provider as _Information_ events with event ID *4100*.
+
+## Notes
+This module requires _Administrator_ privileges.
 
 ## License
 This module is licensed under the [GNU General Public License (GPL) version 2.0](LICENSE).
